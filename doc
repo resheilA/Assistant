@@ -1,0 +1,87 @@
+<?php
+if($_GET['q']) 
+{
+$q = $_GET['q'];
+include("connect.php");
+$parts = explode(' ', $q);
+$size = sizeof($parts);
+// echo $size;
+//$sql="SELECT * FROM search_iglo WHERE keywords='$q'";
+$r = 0;
+$score;
+
+	function whitelist($str)
+	{
+	$str;
+	$worda = array("This","what","What","your","will");
+	$tr = sizeof($worda);
+	while($tr != 0)
+	{
+	if($worda[$tr] == $str){return 1;}
+	$tr--;
+	}
+	return 0; 
+	}
+
+	
+while($size != 0)
+{
+$key = $parts[$r];
+$whitelist = whitelist($key);
+
+//echo strlen($key);
+if($whitelist != 1 && strlen($key) > 3 )
+{
+echo $sql = "SELECT * FROM search_iglo
+WHERE Keywords LIKE '%$key%'";
+
+$result=mysql_query($sql);
+if(!$result)
+{
+echo "Error: Please try again sometime later.<br><br>".mysql_error();die();
+}
+$count=mysql_num_rows($result);
+
+$score[$size] = $count; 
+echo $count;
+
+$size--;$r++;
+}
+else{$size--;$r++;}
+}
+// echo $parts[3];
+
+if($count==0)
+{
+echo "<tr><td>You don't have any updates</td></tr>";
+}
+$counters =0;
+
+if($count > 1)
+{
+ $content = "Please specify more. Tell me excatly which '".$_GET['q']."'";
+}
+else
+{
+while($row = mysql_fetch_array($result))
+ {	
+ $content = $row['Content'];
+ }
+}
+
+}
+
+if($content == "Key-13")
+{
+$content = '
+<div  style="width:88%;height:100%;padding-bottom:.7cm;">
+<a href="http://www.accuweather.com/en/in/mumbai/204842/weather-forecast/204842" class="aw-widget-legal">
+<!--
+By accessing and/or using this code snippet, you agree to AccuWeather’s terms and conditions (in English) which can be found at http://www.accuweather.com/en/free-weather-widgets/terms and AccuWeather’s Privacy Statement (in English) which can be found at http://www.accuweather.com/en/privacy.
+-->
+</a><div id="awcc1440767572013" class="aw-widget-current"  data-locationkey="204842" data-unit="c" data-language="en-us" data-useip="false" data-uid="awcc1440767572013"></div><script type="text/javascript" src="http://oap.accuweather.com/launch.js"></script>
+';
+}
+
+
+?>
